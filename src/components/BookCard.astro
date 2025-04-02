@@ -1,0 +1,42 @@
+---
+// src/components/BookCard.astro
+import { Image } from 'astro:assets';
+import StarRating from './StarRating.astro';
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  book: CollectionEntry<'books'>;
+}
+
+const { book } = Astro.props;
+const { title, author, coverImage, rating, dateRead, tags } = book.data;
+---
+
+<article class="bg-white rounded overflow-hidden shadow-sm hover:shadow transition-shadow duration-300 w-48">
+  <a href={`/books/${book.slug}`} class="block">
+    <div class="relative aspect-[2/3] w-full overflow-hidden">
+      <img src={coverImage} alt={`Cover of ${title}`} class="w-full h-full object-cover" />
+    </div>
+    <div class="p-2">
+      <h2 class="text-sm font-semibold text-gray-900 mb-0.5 truncate" title={title}>{title}</h2>
+      <p class="text-xs text-gray-600 mb-1 truncate" title={author}>by {author}</p>
+      <div class="mb-1 scale-75 origin-left">
+        <StarRating rating={rating} />
+      </div>
+      {tags && tags.length > 0 && (
+        <div class="flex flex-wrap gap-0.5">
+          {tags.slice(0, 2).map((tag) => (
+            <a
+              href={`/tags/${tag}`}
+              class="text-xs bg-blue-50 text-blue-700 px-1.5 py-0.5 rounded hover:bg-blue-100 transition-colors truncate max-w-16"
+              title={tag}
+            >
+              {tag}
+            </a>
+          ))}
+          {tags.length > 2 && <span class="text-xs text-gray-500">+{tags.length - 2}</span>}
+        </div>
+      )}
+    </div>
+  </a>
+</article>

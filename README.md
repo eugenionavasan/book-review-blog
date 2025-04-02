@@ -1,48 +1,66 @@
-# Astro Starter Kit: Basics
+# 📚 Book Review Blog
 
-```sh
-npm create astro@latest -- --template basics
-```
+Welcome to my Book Review Blog! This blog is built using Astro and features a star-rating system along with written reviews to provide insights into the books I read.
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/withastro/astro/tree/latest/examples/basics)
-[![Open with CodeSandbox](https://assets.codesandbox.io/github/button-edit-lime.svg)](https://codesandbox.io/p/sandbox/github/withastro/astro/tree/latest/examples/basics)
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/withastro/astro?devcontainer_path=.devcontainer/basics/devcontainer.json)
+![Home View](./public/home-view.png)
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+## 🚀 Features
 
-![just-the-basics](https://github.com/withastro/astro/assets/2244813/a0a5533c-a856-4198-8470-2d67b1d7c554)
+- Astro-powered: Fast, modern, and optimized for performance.
 
-## 🚀 Project Structure
+- Star rating system: Each book receives a rating alongside a written review.
 
-Inside of your Astro project, you'll see the following folders and files:
+- Optimized performance: Achieves top scores in Lighthouse tests.
 
-```text
-/
-├── public/
-│   └── favicon.svg
-├── src/
-│   ├── layouts/
-│   │   └── Layout.astro
-│   └── pages/
-│       └── index.astro
-└── package.json
-```
+- Responsive design: Works smoothly across different devices.
 
-To learn more about the folder structure of an Astro project, refer to [our guide on project structure](https://docs.astro.build/en/basics/project-structure/).
+## 📊 Performance
 
-## 🧞 Commands
+The blog scores exceptionally well in Lighthouse performance tests, with the following results:
 
-All commands are run from the root of the project, from a terminal:
+General Performance: 98
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
+Best Practices: 100
 
-## 👀 Want to learn more?
+![Lighthouse Score](./public/lighthouse-score.PNG)
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+
+## 🛠️ Installation & Setup
+
+To run this project locally:
+
+- Clone the repository
+git clone https://github.com/your-username/book-review-blog.git
+
+- Navigate to the project folder
+cd book-review-blog
+
+- Install dependencies
+npm install  # or pnpm install
+
+- Run the development server
+npm run dev
+
+Then open http://localhost:4321/ (or the displayed port) in your browser.
+
+## 🛠️ TO-DOs
+
+- Fix filter
+
+- Add Dark theme
+
+- Rating Distribution, not completely happy with it.
+
+- Favicon too heavy, need to reduce it or delete it.
+
+## 📜 License
+
+This project is licensed under the MIT License.
+
+## 📬 Feedback & Contributions
+
+Feel free to submit issues, feature requests, or pull requests on the GitHub repository. I’d love to hear your thoughts!
+
+## 🚀 Happy Reading!
+
+

@@ -1,0 +1,52 @@
+---
+// src/pages/tags/[tag].astro
+import { getCollection } from 'astro:content';
+import Layout from '../../layouts/MainLayout.astro';
+import BookCard from '../../components/BookCard.astro';
+
+export async function getStaticPaths() {
+  const books = await getCollection('books');
+  
+  // Get all unique tags
+  const tags = [...new Set(
+    books.flatMap(book => book.data.tags || [])
+  )];
+  
+  return tags.map(tag => ({
+    params: { tag },
+    props: { tag }
+  }));
+}
+
+const { tag } = Astro.props;
+
+// Get all books with this tag
+const books = await getCollection('books', ({ data }) => {
+  return !data.draft && data.tags && data.tags.includes(tag);
+});
+
+// Sort by dateRead (most recent first)
+const sortedBooks = books.sort((a, b) => 
+  new Date(b.data.dateRead).getTime() - new Date(a.data.dateRead).getTime()
+);
+---
+
+<Layout title={`Books tagged "${tag}"`}>
+  <main class="container mx-auto px-4 py-8">
+    <div class="max-w-6xl mx-auto">
+      <div class="mb-8">
+        <h1 class="text-3xl font-bold text-gray-900 mb-2">Books tagged "{tag}"</h1>
+        <div class="flex items-center justify-between">
+          <p class="text-gray-600">Found {sortedBooks.length} {sortedBooks.length === 1 ? 'book' : 'books'}</p>
+          <a href="/tags" class="text-blue-600 hover:text-blue-800 font-medium">← All Tags</a>
+        </div>
+      </div>
+      
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        {sortedBooks.map(book => (
+          <BookCard book={book} />
+        ))}
+      </div>
+    </div>
+  </main>
+</Layout>

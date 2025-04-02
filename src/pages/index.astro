@@ -1,11 +1,85 @@
 ---
-import Welcome from '../components/Welcome.astro';
-import Layout from '../layouts/Layout.astro';
+import { getCollection } from 'astro:content';
+import Layout from '../layouts/MainLayout.astro';
+import BookCard from '../components/BookCard.astro';
+import StarRating from '../components/StarRating.astro';
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+const books = await getCollection('books', ({ data }) => {
+  return !data.draft;
+});
+
+// Sort by dateRead (most recent first)
+const sortedBooks = books.sort((a, b) => 
+  new Date(b.data.dateRead).getTime() - new Date(a.data.dateRead).getTime()
+);
+
+const recentBooks = sortedBooks.slice(0, 6);
+
+// Calculate average rating
+const averageRating = books.length > 0 
+  ? books.reduce((sum, book) => sum + book.data.rating, 0) / books.length 
+  : 0;
+
+// Get count by rating
+const ratingCounts = [5, 4, 3, 2, 1].map(rating => {
+  const count = books.filter(book => 
+    Math.floor(book.data.rating) === rating
+  ).length;
+  return { rating, count };
+});
 ---
 
-<Layout>
-	<Welcome />
+<Layout title="My Book Reviews">
+  <main class="container mx-auto px-4 py-8">
+    <section class="mb-12">
+      <div class="text-center mb-8">
+        <h1 class="text-4xl font-bold text-gray-900 mb-2">My Book Reviews</h1>
+        <p class="text-xl text-gray-600">Sharing my thoughts on the books I've read</p>
+      </div>
+      
+      <div class="bg-white p-6 rounded-lg shadow-md mb-8">
+        <div class="flex flex-col md:flex-row justify-between items-center">
+          <div>
+            <h2 class="text-2xl font-bold text-gray-900 mb-2">My Reading Stats</h2>
+            <p class="text-gray-600">Total books reviewed: <span class="font-semibold">{books.length}</span></p>
+            <div class="flex items-center mt-2">
+              <span class="text-gray-600 mr-2">Average rating:</span>
+              <StarRating rating={averageRating} />
+            </div>
+          </div>
+          <div class="mt-6 md:mt-0">
+            <h3 class="text-lg font-semibold text-gray-900 mb-2">Ratings Distribution</h3>
+            <div class="space-y-1">
+              {ratingCounts.map(({ rating, count }) => (
+                <div class="flex items-center">
+                  <div class="w-12 flex justify-end mr-2">
+                    <StarRating rating={rating} size="sm" />
+                  </div>
+                  <div class="w-48 bg-gray-200 rounded-full h-2.5">
+                    <div 
+                      class="bg-yellow-400 h-2.5 rounded-full" 
+                      style={`width: ${books.length > 0 ? (count / books.length * 100) : 0}%`}>
+                    </div>
+                  </div>
+                  <span class="ml-2 text-sm text-gray-600">{count}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="mb-12">
+      <div class="flex justify-between items-center mb-6">
+        <h2 class="text-2xl font-bold text-gray-900">Recent Reviews</h2>
+        <a href="/books" class="text-blue-600 hover:text-blue-800 font-medium">View all reviews →</a>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {recentBooks.map((book) => (
+          <BookCard book={book} />
+        ))}
+      </div>
+    </section>
+  </main>
 </Layout>

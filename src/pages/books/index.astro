@@ -1,0 +1,123 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../../layouts/MainLayout.astro';
+import BookCard from '../../components/BookCard.astro';
+
+const books = await getCollection('books', ({ data }) => {
+  return !data.draft;
+});
+
+// Sort by dateRead (most recent first)
+const sortedBooks = books.sort((a, b) => 
+  new Date(b.data.dateRead).getTime() - new Date(a.data.dateRead).getTime()
+);
+
+// Get unique tags
+const allTags = [...new Set(
+  books.flatMap(book => book.data.tags || [])
+)].sort();
+
+// Initialize with empty filter
+let filteredBooks = sortedBooks;
+const { tag, rating } = Astro.url.searchParams;
+
+// Apply tag filter if provided
+if (tag) {
+  filteredBooks = filteredBooks.filter(book => 
+    book.data.tags && book.data.tags.includes(tag)
+  );
+}
+
+// Apply rating filter if provided
+if (rating) {
+  const ratingNum = parseInt(rating);
+  filteredBooks = filteredBooks.filter(book => 
+    Math.floor(book.data.rating) === ratingNum
+  );
+}
+---
+
+<Layout title="All Book Reviews">
+  <main class="container mx-auto px-4 py-8">
+    <div class="text-center mb-8">
+      <h1 class="text-4xl font-bold text-gray-900 mb-2">All Book Reviews</h1>
+      <p class="text-lg text-gray-600">Browse through all the books I've read and reviewed</p>
+    </div>
+
+    <div class="flex flex-col lg:flex-row gap-8">
+      <!-- Filters Sidebar -->
+      <aside class="lg:w-1/4">
+        <div class="bg-white p-6 rounded-lg shadow-md sticky top-6">
+          <h2 class="text-xl font-bold text-gray-900 mb-4">Filters</h2>
+          
+          <!-- Rating Filter -->
+          <div class="mb-6">
+            <h3 class="text-lg font-semibold text-gray-800 mb-2">Rating</h3>
+            <div class="space-y-2">
+              {[5, 4, 3, 2, 1].map((r) => (
+                <a 
+                  href={`/books?rating=${r}`} 
+                  class={`flex items-center p-2 rounded-md transition-colors ${rating == r ? 'bg-blue-100' : 'hover:bg-gray-100'}`}
+                >
+                  <div class="mr-2">
+                    {Array(r).fill(0).map(() => (
+                      <span class="text-yellow-400">★</span>
+                    ))}
+                    {Array(5-r).fill(0).map(() => (
+                      <span class="text-gray-300">★</span>
+                    ))}
+                  </div>
+                  <span class="text-sm text-gray-700">
+                    {r} {r === 1 ? 'star' : 'stars'}
+                  </span>
+                </a>
+              ))}
+              <a 
+                href="/books" 
+                class="block text-sm text-blue-600 hover:text-blue-800 mt-2"
+              >
+                Clear filter
+              </a>
+            </div>
+          </div>
+          
+          <!-- Tags Filter -->
+          <div>
+            <h3 class="text-lg font-semibold text-gray-800 mb-2">Tags</h3>
+            <div class="flex flex-wrap gap-2">
+              {allTags.map((t) => (
+                <a 
+                  href={`/books?tag=${t}`}
+                  class={`text-sm px-3 py-1 rounded-full transition-colors ${
+                    tag === t ? 'bg-blue-600 text-white' : 'bg-blue-100 text-blue-800 hover:bg-blue-200'
+                  }`}
+                >
+                  {t}
+                </a>
+              ))}
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Books Grid -->
+      <div class="lg:w-3/4">
+        {filteredBooks.length > 0 ? (
+          <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
+            {filteredBooks.map((book) => (
+              <BookCard book={book} />
+            ))}
+          </div>
+        ) : (
+          <div class="bg-white p-12 rounded-lg shadow text-center">
+            <h2 class="text-2xl font-bold text-gray-800 mb-2">No books found</h2>
+            <p class="text-gray-600">Try removing some filters to see more results.</p>
+            <a href="/books" class="mt-4 inline-block px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+              View all books
+            </a>
+          </div>
+        )}
+      </div>
+    </div>
+  </main>
+</Layout>

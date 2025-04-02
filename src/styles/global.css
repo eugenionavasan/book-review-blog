@@ -1,0 +1,29 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  font-family: 'Open Sans', sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Merriweather', serif;
+}
+
+.prose h1, .prose h2, .prose h3, .prose h4 {
+  color: #1e3a8a; /* Blue-900 */
+  font-weight: 700;
+  margin-top: 1.5em;
+  margin-bottom: 0.75em;
+}
+
+.prose img {
+  border-radius: 0.375rem;
+  margin: 2rem auto;
+}
+
+.prose blockquote {
+  font-style: italic;
+  color: #4b5563; /* Gray-600 */
+  border-left-color: #3b82f6; /* Blue-500 */
+}
