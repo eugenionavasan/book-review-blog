@@ -29,7 +29,7 @@ const ratingCounts = [5, 4, 3, 2, 1].map(rating => {
 });
 ---
 
-<Layout title="My Book Reviews">
+<Layout title="Home">
   <main class="container mx-auto px-4 py-8">
     <section class="mb-12">
       <div class="text-center mb-8">
@@ -75,9 +75,11 @@ const ratingCounts = [5, 4, 3, 2, 1].map(rating => {
         <h2 class="text-2xl font-bold text-gray-900">Recent Reviews</h2>
         <a href="/books" class="text-blue-600 hover:text-blue-800 font-medium">View all reviews →</a>
       </div>
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div class="flex flex-wrap">
         {recentBooks.map((book) => (
-          <BookCard book={book} />
+          <div class="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/5">
+            <BookCard book={book} />
+          </div>
         ))}
       </div>
     </section>

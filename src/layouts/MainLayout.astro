@@ -7,11 +7,13 @@ import Footer from '../components/Footer.astro';
 interface Props {
   title: string;
   description?: string;
+  webName?: string;
 }
 
 const { 
   title,
-  description = "A personal book review blog where I share my thoughts and ratings on the books I've read."
+  description = "A personal book review blog where I share my thoughts and ratings on the books I've read.",
+  webName = "BookReviews"
 } = Astro.props;
 ---
 
@@ -20,9 +22,9 @@ const {
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{title}</title>
+    <title>{title} || {webName}</title>
     <meta name="description" content={description} />
-    <link rel="icon" type="image/svg+xml" href="/public/favicon.svg" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <!-- Add Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

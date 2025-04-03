@@ -2,7 +2,7 @@
 title: "El nombre del Viento"
 author: "Patrick Rothfuss"
 publishDate: 2007-03-27
-coverImage: "/images/books/el-nombre-del-viento.jpg"
+coverImage: "/images/books/el-nombre-del-viento.webp"
 rating: 4.5
 tags: ["fantasy", "epic", "kvothe"]
 description: "La historia de Kvothe:​ arcanista, asesino, enamorado, músico, estudiante, aventurero y personaje legendario"

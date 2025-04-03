@@ -19,17 +19,8 @@ const sortedTags = Object.entries(tagCounts)
   .sort((a, b) => b[1] - a[1])
   .map(([tag, count]) => ({ tag, count }));
 
-// Function to determine tag size class based on count
-const getTagSizeClass = (count, max) => {
-  const ratio = count / max;
-  if (ratio > 0.8) return 'text-3xl font-bold';
-  if (ratio > 0.6) return 'text-2xl font-semibold';
-  if (ratio > 0.4) return 'text-xl font-medium';
-  if (ratio > 0.2) return 'text-lg';
-  return 'text-base';
-};
 
-const maxCount = Math.max(...Object.values(tagCounts));
+
 ---
 
 <Layout title="Browse by Tags">
@@ -39,14 +30,14 @@ const maxCount = Math.max(...Object.values(tagCounts));
       
       <div class="bg-white rounded-lg shadow-md p-8">
         <p class="text-gray-600 mb-6 text-center">
-          Click on a tag to see all books in that category. Larger tags have more books.
+          Click on a tag to see all books in that category.
         </p>
         
         <div class="flex flex-wrap justify-center gap-4">
           {sortedTags.map(({ tag, count }) => (
             <a 
               href={`/tags/${tag}`}
-              class={`${getTagSizeClass(count, maxCount)} px-3 py-2 bg-blue-50 text-blue-700 rounded-lg hover:bg-blue-100 transition-colors`}
+              class={`px-3 py-2 bg-blue-50 text-blue-700 rounded-lg hover:bg-blue-100 transition-colors`}
             >
               {tag} <span class="text-sm text-gray-500">({count})</span>
             </a>
