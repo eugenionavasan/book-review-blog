@@ -1,0 +1,67 @@
+---
+// src/pages/articles/[slug].astro
+import { getCollection, type CollectionEntry } from 'astro:content';
+import Layout from '../../layouts/MainLayout.astro';
+
+export async function getStaticPaths() {
+  const articles = await getCollection('articles');
+  return articles.map(article => ({
+    params: { slug: article.slug },
+    props: { article },
+  }));
+}
+
+interface Props {
+  article: CollectionEntry<'articles'>;
+}
+
+const { article } = Astro.props;
+const { title, author, publishDate, coverImage, tags, description } = article.data;
+const { Content } = await article.render();
+---
+
+<Layout title={`${title} | Article`}>
+  <main class="container mx-auto px-4 py-8">
+    <article class="bg-white rounded-lg shadow-lg overflow-hidden max-w-4xl mx-auto">
+      <div class="p-6">
+        {coverImage && (
+          <div class="mb-6">
+            <img 
+              src={coverImage} 
+              alt={`Cover image for ${title}`}
+              class="w-full h-64 object-cover rounded-md shadow-md"
+            />
+          </div>
+        )}
+        
+        <div class="mb-6">
+          <h1 class="text-3xl font-bold text-gray-900">{title}</h1>
+          <div class="mt-2 text-gray-600">
+            <span>by {author}</span>
+            <span class="mx-2">•</span>
+            <span>{new Date(publishDate).toLocaleDateString()}</span>
+          </div>
+          
+          {tags && tags.length > 0 && (
+            <div class="mt-4">
+              <div class="flex flex-wrap gap-2">
+                {tags.map((tag) => (
+                  <a 
+                    href={`/articles?tag=${tag}`}
+                    class="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full hover:bg-blue-200 transition-colors"
+                  >
+                    {tag}
+                  </a>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+        
+        <div class="prose max-w-none">
+          <Content />
+        </div>
+      </div>
+    </article>
+  </main>
+</Layout>

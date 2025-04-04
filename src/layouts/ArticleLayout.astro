@@ -1,0 +1,54 @@
+---
+// src/layouts/ArticleLayout.astro
+import Layout from './MainLayout.astro';
+
+interface Props {
+  title: string;
+  publishDate: Date;
+  image?: string;
+  tags?: string[];
+  author?: string;
+}
+
+const { title, publishDate, image, tags = [], author = 'Site Author' } = Astro.props;
+const formattedDate = publishDate.toLocaleDateString('en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric'
+});
+---
+
+<Layout title={title}>
+  <article class="max-w-3xl mx-auto px-4 py-8">
+    <header class="mb-8">
+      <div class="flex flex-wrap gap-2 mb-3">
+        {tags.map(tag => (
+          <span class="px-3 py-1 text-sm bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-100 rounded-full">
+            {tag}
+          </span>
+        ))}
+      </div>
+      <h1 class="text-3xl md:text-4xl font-bold mb-4 text-gray-900 dark:text-white">{title}</h1>
+      <div class="flex items-center text-gray-600 dark:text-gray-400 mb-6">
+        <span>By {author}</span>
+        <span class="mx-2">•</span>
+        <time datetime={publishDate.toISOString()}>{formattedDate}</time>
+      </div>
+      {image && (
+        <div class="w-full h-64 md:h-96 overflow-hidden rounded-lg mb-8">
+          <img src={image} alt={title} class="w-full h-full object-cover" />
+        </div>
+      )}
+    </header>
+    
+    <div class="prose prose-lg dark:prose-invert max-w-none">
+      <slot />
+    </div>
+    
+    <div class="mt-16 pt-8 border-t border-gray-200 dark:border-gray-700">
+      <a href="/articles" class="text-blue-600 dark:text-blue-400 hover:underline">
+        ← Back to all articles
+      </a>
+    </div>
+  </article>
+</Layout>

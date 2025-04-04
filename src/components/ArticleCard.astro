@@ -1,0 +1,65 @@
+---
+// src/components/ArticleCard.astro
+import { type CollectionEntry } from 'astro:content';
+
+interface Props {
+  article: CollectionEntry<'articles'>;
+}
+
+const { article } = Astro.props;
+const { title, author, publishDate, coverImage, tags, description } = article.data;
+---
+
+<div class="bg-white rounded-lg shadow-md overflow-hidden h-full flex flex-col transition-transform hover:scale-[1.02]">
+  {coverImage && (
+    <div class="h-48 overflow-hidden">
+      <a href={`/articles/${article.slug}`}>
+        <img 
+          src={coverImage} 
+          alt={`Cover image for ${title}`}
+          class="w-full h-full object-cover"
+        />
+      </a>
+    </div>
+  )}
+  
+  <div class="p-4 flex-grow flex flex-col">
+    <div class="mb-2">
+      <a href={`/articles/${article.slug}`} class="hover:text-blue-600">
+        <h3 class="text-xl font-bold text-gray-900">{title}</h3>
+      </a>
+      <div class="text-sm text-gray-600 mt-1">
+        <span>{new Date(publishDate).toLocaleDateString()}</span>
+      </div>
+    </div>
+    
+    {tags && tags.length > 0 && (
+      <div class="mb-3 flex flex-wrap gap-1">
+        {tags.map((tag) => (
+          <a 
+            href={`/articles?tag=${tag}`}
+            class="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full hover:bg-blue-200 transition-colors"
+          >
+            {tag}
+          </a>
+        ))}
+      </div>
+    )}
+    
+    <p class="text-gray-600 text-sm mb-4 line-clamp-3 flex-grow">
+      {description}
+    </p>
+    
+    <div class="mt-auto">
+      <a 
+        href={`/articles/${article.slug}`}
+        class="text-blue-600 hover:text-blue-800 font-medium inline-flex items-center"
+      >
+        Read more 
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+        </svg>
+      </a>
+    </div>
+  </div>
+</div>
