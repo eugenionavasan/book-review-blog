@@ -13,7 +13,7 @@ const { title, author, coverImage, rating, dateRead, tags } = book.data;
 ---
 
 <article class="bg-white rounded overflow-hidden shadow-sm hover:shadow transition-shadow duration-300 w-48">
-  <a href={`/books/${book.slug}`} class="block">
+  <a href={`/reviews/${book.slug}`} class="block">
     <div class="relative aspect-[2/3] w-full overflow-hidden">
       <img src={coverImage} alt={`Cover of ${title}`} class="w-full h-full object-cover" />
     </div>

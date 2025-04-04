@@ -1,0 +1,152 @@
+---
+// src/components/ArticleCarousel.astro
+import { type CollectionEntry } from 'astro:content';
+
+interface Props {
+  articles: CollectionEntry<'articles'>[];
+}
+
+const { articles } = Astro.props;
+---
+
+<div class="relative w-full">
+  <!-- Carousel container -->
+  <div class="relative overflow-hidden rounded-lg shadow-xl">
+    <!-- Carousel items -->
+    <div id="article-carousel" class="flex transition-transform duration-500 ease-in-out">
+      {articles.map((article, index) => (
+        <div class="w-full flex-shrink-0 relative" data-index={index}>
+          <a href={`/articles/${article.slug}`} class="block">
+            <div class="relative h-[400px] sm:h-[480px] w-full">
+              <img 
+                src={article.data.coverImage || '/images/default-article.jpg'} 
+                alt={article.data.title}
+                class="w-full h-full object-cover brightness-75"
+              />
+              <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
+              <div class="absolute bottom-0 left-0 right-0 p-6 text-white">
+                <h3 class="text-2xl sm:text-3xl font-bold mb-2">{article.data.title}</h3>
+                <p class="text-sm sm:text-base mb-2 line-clamp-2">{article.data.description}</p>
+                <div class="flex items-center text-sm opacity-80">
+                  <span>{article.data.author}</span>
+                  <span class="mx-2">•</span>
+                  <span>{new Date(article.data.publishDate).toLocaleDateString()}</span>
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
+      ))}
+    </div>
+
+    <!-- Navigation buttons -->
+    <button 
+      id="prev-btn" 
+      class="absolute left-4 top-1/2 -translate-y-1/2 bg-white/30 backdrop-blur-sm hover:bg-white/50 text-white rounded-full p-2 focus:outline-none shadow-lg transition"
+      aria-label="Previous article"
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+      </svg>
+    </button>
+
+    <button 
+      id="next-btn" 
+      class="absolute right-4 top-1/2 -translate-y-1/2 bg-white/30 backdrop-blur-sm hover:bg-white/50 text-white rounded-full p-2 focus:outline-none shadow-lg transition"
+      aria-label="Next article"
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+      </svg>
+    </button>
+
+    <!-- Indicators -->
+    <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex space-x-2">
+      {articles.map((_, index) => (
+        <button 
+          class="carousel-indicator w-2.5 h-2.5 rounded-full bg-white/50 hover:bg-white/70 focus:outline-none transition"
+          data-index={index}
+          aria-label={`Go to slide ${index + 1}`}
+        ></button>
+      ))}
+    </div>
+  </div>
+</div>
+
+<script>
+  // Carousel functionality
+  document.addEventListener('DOMContentLoaded', () => {
+    const carousel = document.getElementById('article-carousel');
+    const items = carousel?.querySelectorAll('[data-index]');
+    const prevBtn = document.getElementById('prev-btn');
+    const nextBtn = document.getElementById('next-btn');
+    const indicators = document.querySelectorAll('.carousel-indicator');
+    const itemCount = items?.length || 0;
+    
+    let currentIndex = 0;
+    
+    // Initialize active indicator
+    updateIndicators();
+
+    // Function to update the carousel display
+    function updateCarousel() {
+      if (carousel) {
+        carousel.style.transform = `translateX(-${currentIndex * 100}%)`;
+      }
+      updateIndicators();
+    }
+    
+    // Function to update indicator states
+    function updateIndicators() {
+      indicators.forEach((indicator, index) => {
+        if (index === currentIndex) {
+          indicator.classList.add('bg-white');
+          indicator.classList.remove('bg-white/50');
+        } else {
+          indicator.classList.remove('bg-white');
+          indicator.classList.add('bg-white/50');
+        }
+      });
+    }
+
+    // Previous button click
+    prevBtn?.addEventListener('click', () => {
+      currentIndex = (currentIndex - 1 + itemCount) % itemCount;
+      updateCarousel();
+    });
+
+    // Next button click
+    nextBtn?.addEventListener('click', () => {
+      currentIndex = (currentIndex + 1) % itemCount;
+      updateCarousel();
+    });
+
+    // Indicator clicks
+    indicators.forEach((indicator) => {
+      indicator.addEventListener('click', () => {
+        const index = parseInt(indicator.getAttribute('data-index') || '0');
+        currentIndex = index;
+        updateCarousel();
+      });
+    });
+
+    // Auto-rotate every 5 seconds
+    let autoRotateInterval = setInterval(() => {
+      currentIndex = (currentIndex + 1) % itemCount;
+      updateCarousel();
+    }, 5000);
+
+    // Pause auto-rotate on hover
+    carousel?.addEventListener('mouseenter', () => {
+      clearInterval(autoRotateInterval);
+    });
+
+    // Resume auto-rotate on mouse leave
+    carousel?.addEventListener('mouseleave', () => {
+      autoRotateInterval = setInterval(() => {
+        currentIndex = (currentIndex + 1) % itemCount;
+        updateCarousel();
+      }, 5000);
+    });
+  });
+</script>

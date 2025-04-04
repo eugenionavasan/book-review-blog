@@ -2,27 +2,15 @@
 
 Welcome to my Book Review Blog! This blog is built using Astro and features a star-rating system along with written reviews to provide insights into the books I read.
 
-![Home View](./public/home-view.png)
-
 ## 🚀 Features
 
 - Astro-powered: Fast, modern, and optimized for performance.
 
 - Star rating system: Each book receives a rating alongside a written review.
 
-- Optimized performance: Achieves top scores in Lighthouse tests.
+- Articles with a Carousel at home page to view the latest.
 
 - Responsive design: Works smoothly across different devices.
-
-## 📊 Performance
-
-The blog scores exceptionally well in Lighthouse performance tests, with the following results:
-
-General Performance: 98
-
-Best Practices: 100
-
-![Lighthouse Score](./public/lighthouse-score.PNG)
 
 
 ## 🛠️ Installation & Setup
